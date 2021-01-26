@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Index of Stocks
+{% endblock %}
+
+{% block main %}
+    <h1>Your Purchases</h1>
+    <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Stock Symbol</th>
+      <th scope="col">Share Qty</th>
+      <th scope="col">Current Price</th>
+      <th scope="col">Current Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      {% for g in groups %}
+      {% set stock = lookup( g.symbol ) %}
+      <th scope="row">{{ loop.index }}</th>
+      <td>{{ g.symbol }}</td>
+      <td>{{ stock.name }}</td>
+      <td>{{ g.SUM }}</td>
+      <td>{{ "$%.2f" | format(stock.price) }}</td>
+      <td>{{ "$%.2f" | format(g.SUM * stock.price) }}</td>
+      {% endfor %}
+    </tr>
+  </tbody>
+</table>
+    <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Your Balance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">{{ cashvalue }}</th>
+    </tr>
+  </tbody>
+</table>
+{% endblock %}
