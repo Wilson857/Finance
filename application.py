@@ -160,7 +160,17 @@ def register():
 @login_required
 def sell():
     """Sell shares of stock"""
-    return apology("TODO")
+    if request.method == "POST":
+        stocks=db.execute("SELECT symbol FROM purchases WHERE id = ?", session["user_id"])
+        cash = db.execute("SELECT cash FROM users WHERE id = ?", session["user_id"])
+        cashValue = float(cash[0]["cash"])
+        costOfShares = int(numOfShares) * price
+        balance = cashValue + costOfShares
+        if stocks = request.form.get():
+            return apology("500")
+        else:
+            return render_template("sold.html", cashValue=cashValue, costOfShares=costOfShares, balance=balance)
+        return render_template("sell.html", stocks=stocks)
 
 
 def errorhandler(e):
