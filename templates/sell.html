@@ -6,19 +6,14 @@
 
 {% block main %}
     <form action="/buy" method="post">
-        <div class="dropdown">
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-            Dropdown button
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            {% For stock in stocks %}
-                <li><a class="dropdown-item" href="#">{{ stock.symbol }}</a></li>
+        <select class="form-control" id="symbol">
+            <option disabled selected value="">Stock</option>
+            {% for stock in stocks %}
+                <option value="{{ stock.symbol }}">{{ stock.symbol }}</option>
             {% endfor %}
-          </ul>
+        </select>
+        <div>
+            <button class="btn btn-primary" type="submit">Sell</button>
         </div>
-        <div class="form-group">
-            <input autocomplete="off" autofocus class="form-control" name="shares" placeholder="Shares" type="text">
-        </div>
-        <button class="btn btn-primary" type="submit">Sell</button>
     </form>
 {% endblock %}

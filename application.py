@@ -160,17 +160,25 @@ def register():
 @login_required
 def sell():
     """Sell shares of stock"""
+    stocks = db.execute("SELECT symbol FROM sales WHERE user_id = ? GROUP BY symbol", session["user_id"])
     if request.method == "POST":
-        stocks=db.execute("SELECT symbol FROM purchases WHERE id = ?", session["user_id"])
+        currentTime = datetime.datetime.now()
+        symbol = request.form.get("symbol")
+        numOfShares = request.form.get("shares")
+        sold = lookup(symbol)
+        price=sold["price"]
         cash = db.execute("SELECT cash FROM users WHERE id = ?", session["user_id"])
         cashValue = float(cash[0]["cash"])
-        costOfShares = int(numOfShares) * price
+        valueOfShares = int(numOfShares) * price
         balance = cashValue + costOfShares
-        if stocks = request.form.get():
-            return apology("500")
+        if valueOfShares <= 0:
+            return apology()
         else:
-            return render_template("sold.html", cashValue=cashValue, costOfShares=costOfShares, balance=balance)
-        return render_template("sell.html", stocks=stocks)
+            purchase = db.execute("INSERT INTO sales (user_id, symbol, share_value, num_shares, total_sale, timestamp) VALUES(?, ?, ?, ?, ?, ?)", \
+                                session["user_id"], symbol, price, numOfShares, valueOfShares, currentTime)
+            newBalance = db.execute("UPDATE users SET cash = ? WHERE id = ?", balance, session["user_id"])
+            return render_template("sold.html", cash=cash, valueOfShares=valueOfShares, balance=balance)
+    return render_template("sell.html", stocks=stocks)
 
 
 def errorhandler(e):
