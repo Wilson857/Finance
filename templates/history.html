@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    History
+{% endblock %}
+
+{% block main %}
+    <h1>Your Purchases</h1>
+    <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Stock Symbol</th>
+      <th scope="col">Share Qty</th>
+      <th scope="col">Transaction Type</th>
+      <th scope="col">Price</th>
+      <th scope="col">Value</th>
+      <th scope="col">Time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      {% for g in groups %}
+      {% set stock = lookup( g.symbol ) %}
+      <th scope="row">{{ loop.index }}</th>
+      <td>{{ g.symbol }}</td>
+      <td>{{ stock.name }}</td>
+      <td>{{ g.num_shares }}</td>
+      <td>{{ g.trans_type }}</td>
+      <td>{{ "$%.2f" | format(g.share_price }}</td>
+      <td>{{ "$%.2f" | format(g.total_cost) }}</td>
+      <td>{{ currentTime }}</td>
+      {% endfor %}
+    </tr>
+  </tbody>
+</table>
+    <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Your Balance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">{{ cashValue }}</th>
+    </tr>
+  </tbody>
+</table>
+{% endblock %}

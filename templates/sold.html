@@ -5,22 +5,19 @@
 {% endblock %}
 
 {% block main %}
-    <h1>Purchase</h1>
-    <table class="table">
-  <thead>
-    <tr>
-      <th scope="col">Balance</th>
-      <th scope="col">Price</th>
-      <th scope="col">New Balance</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>{{ cash }}</td>
-      <td>{{ valueOfShares }}</td>
-      <td>{{ balance }}</td>
-    </tr>
-  </tbody>
-</table>
+
+    <table>
+        <tr>
+            <td>Current balance</td>
+            <td>Value of sale</td>
+            <td>New balance</td>
+        </tr>
+        <tr>
+            <td>{{ cash }}</td>
+            <td>{{ valueOfShares }}</td>
+            <td>{{ balance }}</td>
+        </tr>
+    </table>
+
+    <h1>You have requested to sell {{ numOfShares }} shares in {{ sold.name }} at a price of ${{ sold.price }} USD per share</h1>
 {% endblock %}
