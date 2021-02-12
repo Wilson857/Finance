@@ -9,6 +9,8 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from helpers import apology, login_required, lookup, usd
 
+#Ideas courtesy of Mr. Douglass' Github
+
 # Configure application
 app = Flask(__name__)
 
@@ -83,10 +85,10 @@ def buy():
 def history():
     """Show history of transactions"""
     currentTime = datetime.datetime.now()
-    groups = db.execute("SELECT symbol, SUM(num_shares) AS sum FROM transactions WHERE user_id = ? AND trans_type = ?", session["user_id"], trans_type)
+    groups = db.execute("SELECT symbol, num_shares, trans_type, share_price, total_cost FROM transactions WHERE user_id = ?", session["user_id"])
     cash = db.execute("SELECT cash FROM users WHERE id = ?", session["user_id"])
     cashValue = float(cash[0]["cash"])
-    return render_template("history.html", groups=groups, cashValue=cashValue, currentTime)
+    return render_template("history.html", groups=groups, cashValue=cashValue, currentTime=currentTime)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -189,6 +191,18 @@ def sell():
             return render_template("sold.html", symbol=symbol, balance=balance, valueOfShares=negValue, sold=sold, numOfShares=negNumShares, cash=cash[0]["cash"])
     return render_template("sell.html", stocks=stocks)
 
+@app.route("/cash", methods=["GET", "POST"])
+@login_required
+def cash():
+    """Add cash"""
+    cash = db.execute("SELECT cash FROM users WHERE id = ?", session["user_id"])
+    cashValue = float(cash[0]["cash"])
+    if request.method == "POST":
+        newCash = int(request.form.get("newcash"))
+        balance = cashValue + newcash
+        newBalance = db.execute("UPDATE users SET cash = ? WHERE id = ?", balance, session["user_id"])
+        return render_template("cash2.html", balance=balance, cashValue=cashValue, newCash=newCash)
+    return render_template("cash.html", cashValue=cashValue)
 
 def errorhandler(e):
     """Handle error"""
